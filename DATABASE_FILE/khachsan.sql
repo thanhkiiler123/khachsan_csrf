@@ -544,20 +544,11 @@ INSERT INTO `admin_cred` (`sr_no`, `admin_name`, `admin_pass`) VALUES
 (2, 'hongngoc', '123456');
 
 --
--- Đang đổ dữ liệu cho bảng `booking_details`
+-- Đang đổ dữ liệu cho bảng `user_cred`
 --
 
-INSERT INTO `booking_details` (`sr_no`, `booking_id`, `room_name`, `price`, `total_pay`, `room_no`, `user_name`, `phonenum`, `address`) VALUES
-
-(106, 96, 'Phòng Đơn', 500000, 2500000, NULL, 'Hồng Ngọc', '0888131067', 'Ha Noi');
-
---
--- Đang đổ dữ liệu cho bảng `booking_order`
---
-
-INSERT INTO `booking_order` (`booking_id`, `user_id`, `room_id`, `check_in`, `check_out`, `arrival`, `refund`, `booking_status`, `order_id`, `trans_id`, `trans_amt`, `trans_status`, `trans_resp_msg`, `rate_review`, `datentime`) VALUES
-(96, 9, 3, '2023-10-13', '2023-10-18', 0, NULL, 'Đã Đặt', 'ORD_97949965', NULL, 0, 'Đã Đặt', NULL, NULL, '2023-10-13 15:18:38');
-
+INSERT INTO `user_cred` (`id`, `name`, `email`, `address`, `phonenum`, `pincode`, `dob`, `profile`, `password`, `is_verified`, `token`, `t_expire`, `status`, `datentime`) VALUES
+(9, 'Hồng Ngọc', 'ngoc2907@gmail.com', 'Ha Noi', '0888131067', 460000, '2023-10-07', 'IMG_38202.jpeg', '123456', 1, NULL, NULL, 1, '2023-10-22 14:32:35');
 --
 -- Đang đổ dữ liệu cho bảng `carousel`
 --
@@ -673,9 +664,16 @@ INSERT INTO `settings` (`sr_no`, `site_title`, `site_about`, `shutdown`) VALUES
 (1, 'The Bridge', 'Khách sạn The Bridge là một trong những khách sạn hàng đầu tại Việt Nam, được thiết kế theo phong cách hiện đại và đầy đủ tiện nghi, với hệ thống phòng nghỉ sang trọng, nhà hàng, quầy bar, trung tâm thể dục và spa. Khách sạn có hơn 50 tầng', 0);
 
 --
--- Đang đổ dữ liệu cho bảng `user_cred`
+-- Đang đổ dữ liệu cho bảng `booking_order`
 --
 
-INSERT INTO `user_cred` (`id`, `name`, `email`, `address`, `phonenum`, `pincode`, `dob`, `profile`, `password`, `is_verified`, `token`, `t_expire`, `status`, `datentime`) VALUES
-(9, 'Hồng Ngọc', 'ngoc2907@gmail.com', 'Ha Noi', '0888131067', 460000, '2023-10-07', 'IMG_38202.jpeg', '123456', 1, NULL, NULL, 1, '2023-10-22 14:32:35');
+INSERT INTO `booking_order` (`booking_id`, `user_id`, `room_id`, `check_in`, `check_out`, `arrival`, `refund`, `booking_status`, `order_id`, `trans_id`, `trans_amt`, `trans_status`, `trans_resp_msg`, `rate_review`, `datentime`) VALUES
+(96, 9, 3, '2023-10-13', '2023-10-18', 0, NULL, 'Đã Đặt', 'ORD_97949965', NULL, 0, 'Đã Đặt', NULL, NULL, '2023-10-13 15:18:38');
 
+--
+-- Đang đổ dữ liệu cho bảng `booking_details`
+--
+
+INSERT INTO `booking_details` (`sr_no`, `booking_id`, `room_name`, `price`, `total_pay`, `room_no`, `user_name`, `phonenum`, `address`) VALUES
+
+(106, 96, 'Phòng Đơn', 500000, 2500000, NULL, 'Hồng Ngọc', '0888131067', 'Ha Noi');
