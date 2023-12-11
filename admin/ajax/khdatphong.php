@@ -21,7 +21,6 @@ if (isset($_POST['get_bookings'])) {
     echo "<b>Không tìm thấy dữ liệu nào!</b>";
     exit;
   }
-
   while ($data = mysqli_fetch_assoc($res)) {
     $date = date("d-m-Y", strtotime($data['datentime']));
     $checkin = date("d-m-Y", strtotime($data['check_in']));
@@ -114,7 +113,7 @@ if (isset($_POST['kh_booking'])) {
   $frm_data = filteration($_POST);
   $token = filter_input(INPUT_POST, 'csrf_token', FILTER_UNSAFE_RAW);
   if (!$token || $token !== $_SESSION['csrf_token']) {
-    echo 'Đăng xuất thất bại!';
+    echo 'Xác nhận thất bại!';
     header($_SERVER['SERVER_PROTOCOL'] . ' 405 Method Not Allowed');
     exit;
   } else {

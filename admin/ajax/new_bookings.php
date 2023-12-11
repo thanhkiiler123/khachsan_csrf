@@ -120,17 +120,23 @@ if (isset($_POST['get_bookings'])) {
 
 if (isset($_POST['payment_booking'])) {
   $frm_data = filteration($_POST);
-
-  $query = "UPDATE `booking_order` bo INNER JOIN `booking_details` bd
-      ON bo.booking_id = bd.booking_id INNER JOIN `rooms` r
-      ON bo.room_id = r.id
-      SET bo.arrival = ?, bo.booking_status = ?, bo.trans_amt = ?, bo.trans_status=?
-      WHERE bo.booking_id = ?";
-
-  $values = [1, $frm_data['booking_status'], $frm_data['trans_amt'], $frm_data['trans_status'],$frm_data['booking_id']];
-
-  $res = update($query, $values, 'isssi');
-  echo $res;
+  $token = filter_input(INPUT_POST, 'csrf_token', FILTER_UNSAFE_RAW);
+  if (!$token || $token !== $_SESSION['csrf_token']) {
+    echo 'Xác nhận thất bại!';
+    header($_SERVER['SERVER_PROTOCOL'] . ' 405 Method Not Allowed');
+    exit;
+  } else {
+      $query = "UPDATE `booking_order` bo INNER JOIN `booking_details` bd
+          ON bo.booking_id = bd.booking_id INNER JOIN `rooms` r
+          ON bo.room_id = r.id
+          SET bo.arrival = ?, bo.booking_status = ?, bo.trans_amt = ?, bo.trans_status=?
+          WHERE bo.booking_id = ?";
+    
+      $values = [1, $frm_data['booking_status'], $frm_data['trans_amt'], $frm_data['trans_status'],$frm_data['booking_id']];
+    
+      $res = update($query, $values, 'isssi');
+      echo $res;
+  }
 }
 
 

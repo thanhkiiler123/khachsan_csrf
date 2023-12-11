@@ -54,6 +54,7 @@ function payment_booking(id, price, totalDay) {
     data.append('booking_status', 'Đã Thanh Toán');
     data.append('trans_status', 'TXN_SUCCESS');
     data.append('payment_booking', '');
+    data.append('csrf_token', csrf_token);
 
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "ajax/new_bookings.php", true);

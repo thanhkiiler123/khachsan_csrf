@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <?php require('inc/links.php'); ?>
   <title><?php echo $settings_r['site_title'] ?> - LIÊN HỆ</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body class="bg-light">
 
@@ -96,34 +97,49 @@
               <label class="form-label" style="font-weight: 500;">Tin Nhắn</label>
               <textarea name="message" required class="form-control shadow-none" rows="5" style="resize: none;"></textarea>
             </div>
+            <div class="mt-3">
+              <label for="captcha">Nhập mã bảo mật bên phải: </label>
+              <img src="captcha.php" alt="CAPTCHA" class="captcha-image"><i class="fas fa-redo refresh-captcha"></i>
+              <br>
+              <input type="text" id="captcha" name="captcha_challenge" pattern="[A-Z]{6}">
+            </div>
             <button type="submit" name="send" class="btn text-white custom-bg mt-3">GỬI</button>
           </form>
         </div>
       </div>
     </div>
   </div>
-
-
+  
   <?php 
 
     if(isset($_POST['send']))
     {
+
       $frm_data = filteration($_POST);
+      if(isset($_POST['captcha_challenge']) && $_POST['captcha_challenge'] == $_SESSION['captcha_text']) {
+        $q = "INSERT INTO `user_queries`(`name`, `email`, `subject`, `message`) VALUES (?,?,?,?)";
+        $values = [$frm_data['name'],$frm_data['email'],$frm_data['subject'],$frm_data['message']];
+  
+        $res = insert($q,$values,'ssss');
+        if($res==1){
+          alert('success','Mail sent!');
+        }
+        else{
+          alert('error','Server Down! Try again later.');
+        }
 
-      $q = "INSERT INTO `user_queries`(`name`, `email`, `subject`, `message`) VALUES (?,?,?,?)";
-      $values = [$frm_data['name'],$frm_data['email'],$frm_data['subject'],$frm_data['message']];
-
-      $res = insert($q,$values,'ssss');
-      if($res==1){
-        alert('success','Mail sent!');
-      }
-      else{
-        alert('error','Server Down! Try again later.');
+      }else {
+        echo '<p>You entered an incorrect Captcha.</p>';
       }
     }
   ?>
 
   <?php require('inc/footer.php'); ?>
-
+  <script>
+  var refreshButton = document.querySelector(".refresh-captcha");
+    refreshButton.onclick = function() {
+      document.querySelector(".captcha-image").src = 'captcha.php?' + Date.now();
+  }
+  </script>
 </body>
 </html>

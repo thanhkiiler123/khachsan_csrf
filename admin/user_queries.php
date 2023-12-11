@@ -29,10 +29,9 @@
     }
   }
 
-  if(isset($_GET['del']))
-  {
+if(isset($_GET['del'], $_GET['csrf_token']) && hash_equals($_SESSION['csrf_token'], $_GET['csrf_token'])) {
     $frm_data = filteration($_GET);
-
+    
     if($frm_data['del']=='all'){
       $q = "DELETE FROM `user_queries`";
       if(mysqli_query($con,$q)){
@@ -110,7 +109,7 @@
                       if($row['seen']!=1){
                         $seen = "<a href='?seen=$row[sr_no]' class='btn btn-sm rounded-pill btn-primary'>Đánh dấu là đã đọc</a> <br>";
                       }
-                      $seen.="<a href='?del=$row[sr_no]' class='btn btn-sm rounded-pill btn-danger mt-2'>Xoá</a>";
+                      $seen.="<a href='?del=$row[sr_no]&csrf_token=$_SESSION[csrf_token]' class='btn btn-sm rounded-pill btn-danger mt-2'>Xoá</a>";
 
                       echo<<<query
                         <tr>

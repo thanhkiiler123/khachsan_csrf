@@ -62,7 +62,6 @@
             }
           } else {
             $btn = "
-            <input type='hidden' name='csrf_token' value='<?php echo $_SESSION[csrf_token] ?? '' ?>'>
             <button onclick='cancel_booking($data[booking_id])' type='button' class='btn btn-danger btn-sm shadow-none'>Cancel</button>";
           }
         } else if ($data['booking_status'] == 'Đã Huỷ') {

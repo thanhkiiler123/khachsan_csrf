@@ -32,6 +32,7 @@
               <table class="table table-hover border" style="min-width: 1200px;">
                 <thead>
                   <tr class="bg-dark text-light">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?>">
                     <th scope="col">#</th>
                     <th scope="col">Thông Tin Khách Hàng</th>
                     <th scope="col">Phòng</th>

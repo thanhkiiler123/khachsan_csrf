@@ -48,13 +48,13 @@
 
   $room_data = mysqli_fetch_assoc($room_res);
 
-  $_SESSION['room'] = [
+  /*$_SESSION['room'] = [
     "id" => $room_data['id'],
     "name" => $room_data['name'],
     "price" => $room_data['price'],
     "payment" => null,
     "available" => false,
-  ];
+  ];*/
 
 
   $user_res = select("SELECT * FROM `user_cred` WHERE `id`=? LIMIT 1", [$_SESSION['uId']], "i");
@@ -126,11 +126,13 @@
                   <label class="form-label">Ngày Trả Phòng</label>
                   <input name="checkout" onchange="check_availability()" type="date" class="form-control shadow-none" required>
                 </div>
-                <!-- <div class="mb-3">
-                  <label class="form-label">Nhập giá trị từ hình ảnh:</label>
-                  <input type="text" name="captcha_input" class="form-control shadow-none" required>
-                </div>
-                <img src="captcha.php" alt="Captcha Image" class="mb-3"> -->
+                <input name="uid" type="hidden" value="<?php echo $_SESSION['uId'] ?>" >
+                <input name="roomid" type="hidden" value="<?php echo $room_data['id'] ?>" >
+                <input name="orderid" type="hidden" value="<?php echo 'ORD_' . $_SESSION['uId'] . random_int(11111, 9999999) ?>" >
+                <input name="roomname" type="hidden" value="<?php echo $room_data['name'] ?>" >
+                <input name="roomprice" type="hidden" value="<?php echo $room_data['price'] ?>" >
+                <input name="roompayment" type="hidden" value="<?php echo null ?>" >
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?>">
                 <div class="col-12">
                   <div class="spinner-border text-info mb-3 d-none" id="info_loader" role="status">
                     <span class="visually-hidden">Đang Tải ...</span>
@@ -161,50 +163,52 @@
     function check_availability() {
       let checkin_val = booking_form.elements['checkin'].value;
       let checkout_val = booking_form.elements['checkout'].value;
-
+      let roomid = booking_form.elements['roomid'].value;
+      let roomprice = booking_form.elements['roomprice'].value;
       booking_form.elements['pay_now'].setAttribute('disabled', true);
 
       if (checkin_val != '' && checkout_val != '') {
         pay_info.classList.add('d-none');
-          pay_info.classList.replace('text-dark', 'text-danger');
-          info_loader.classList.remove('d-none');
+        pay_info.classList.replace('text-dark', 'text-danger');
+        info_loader.classList.remove('d-none');
 
-          let data = new FormData();
+        let data = new FormData();
 
-          data.append('check_availability', '');
-          data.append('check_in', checkin_val);
-          data.append('check_out', checkout_val);
+        data.append('check_availability', '');
+        data.append('check_in', checkin_val);
+        data.append('check_out', checkout_val);
+        data.append('roomid', roomid);
+        data.append('roomprice', roomprice);
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "ajax/confirm_booking.php", true);
 
-          let xhr = new XMLHttpRequest();
-          xhr.open("POST", "ajax/confirm_booking.php", true);
+        xhr.onload = function() {
+          let data = JSON.parse(this.responseText);
 
-          xhr.onload = function() {
-            let data = JSON.parse(this.responseText);
-
-            if (data.status == 'check_in_out_equal') {
-              pay_info.innerText = "Bạn không thể trả phòng trong cùng một ngày!";
-            } else if (data.status == 'check_out_earlier') {
-              pay_info.innerText = "Ngày trả phòng sớm hơn ngày nhận phòng!";
-            } else if (data.status == 'check_in_earlier') {
-              pay_info.innerText = "Ngày nhận phòng sớm hơn ngày hôm nay!";
-            } else if (data.status == 'unavailable') {
-              pay_info.innerText = "Đã hết phòng cho ngày đặt phòng này!";
-            } 
-            else {
-              pay_info.innerHTML = "Số Phòng Trống: " + data.c_rooms + "<br>Số ngày Đặt: " + data.days + "<br>Tổng số tiền phải trả: " + data.payment + ' vnđ';
-              // pay_info.innerHTML = "Số lượng: " + data.ppp + ' ppp';
-              // pay_info.innerHTML = "Số lượng T: " + data.kk + ' ppp';
-              pay_info.classList.replace('text-danger', 'text-dark');
-              booking_form.elements['pay_now'].removeAttribute('disabled');
-            }
-
-            pay_info.classList.remove('d-none');
-            info_loader.classList.add('d-none');
+          if (data.status == 'check_in_out_equal') {
+            pay_info.innerText = "Bạn không thể trả phòng trong cùng một ngày!";
+          } else if (data.status == 'check_out_earlier') {
+            pay_info.innerText = "Ngày trả phòng sớm hơn ngày nhận phòng!";
+          } else if (data.status == 'check_in_earlier') {
+            pay_info.innerText = "Ngày nhận phòng sớm hơn ngày hôm nay!";
+          } else if (data.status == 'unavailable') {
+            pay_info.innerText = "Đã hết phòng cho ngày đặt phòng này!";
+          } else {
+            pay_info.innerHTML = "Số Phòng Trống: " + data.c_rooms + "<br>Số ngày Đặt: " + data.days + "<br>Tổng số tiền phải trả: " + data.payment + ' vnđ';
+            // pay_info.innerHTML = "Số lượng: " + data.ppp + ' ppp';
+            // pay_info.innerHTML = "Số lượng T: " + data.kk + ' ppp';
+	          document.querySelector("input[name='roompayment']").value=data.payment;
+            pay_info.classList.replace('text-danger', 'text-dark');
+            booking_form.elements['pay_now'].removeAttribute('disabled');
           }
 
+          pay_info.classList.remove('d-none');
+          info_loader.classList.add('d-none');
+        }
+
         xhr.send(data);
-        
       }
+
     }
   </script>
 

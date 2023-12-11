@@ -134,6 +134,7 @@
               </div>
             </div>
           </div>
+          <input type="hidden" name="csrf_token" value="$_SESSION[csrf_token]">
           <div class="modal-footer">
             <button type="reset" class="btn text-secondary shadow-none" data-bs-dismiss="modal">Huỷ</button>
             <button type="submit" class="btn custom-bg text-white shadow-none">Thêm</button>
@@ -221,6 +222,7 @@
               <input type="hidden" name="room_id">
             </div>
           </div>
+          <input type="hidden" name="csrf_token" value="$_SESSION[csrf_token]">
           <div class="modal-footer">
             <button type="reset" class="btn text-secondary shadow-none" data-bs-dismiss="modal">Huỷ</button>
             <button type="submit" class="btn custom-bg text-white shadow-none">Cập Nhật</button>

@@ -11,7 +11,7 @@ if (isset($_POST['add_room'])) {
   $flag = 0;
   $token = filter_input(INPUT_POST, 'csrf_token', FILTER_UNSAFE_RAW);
   if (!$token || $token !== $_SESSION['csrf_token']) {
-    echo 'Đăng xuất thất bại!';
+    echo 'Thêm phòng thất bại!';
     header($_SERVER['SERVER_PROTOCOL'] . ' 405 Method Not Allowed');
     exit;
   } else {
@@ -139,7 +139,7 @@ if (isset($_POST['edit_room'])) {
   $flag = 0;
   $token = filter_input(INPUT_POST, 'csrf_token', FILTER_UNSAFE_RAW);
   if (!$token || $token !== $_SESSION['csrf_token']) {
-    echo 'Đăng xuất thất bại!';
+    echo 'Chỉnh sửa thất bại!';
     header($_SERVER['SERVER_PROTOCOL'] . ' 405 Method Not Allowed');
     exit;
   } else {
@@ -283,24 +283,25 @@ if (isset($_POST['thumb_image'])) {
 
 if (isset($_POST['remove_room'])) {
   $frm_data = filteration($_POST);
-
-  $res1 = select("SELECT * FROM `room_images` WHERE `room_id`=?", [$frm_data['room_id']], 'i');
-
-  while ($row = mysqli_fetch_assoc($res1)) {
-    deleteImage($row['image'], ROOMS_FOLDER);
-  }
-
-  $res2 = delete("DELETE FROM `room_images` WHERE `room_id`=?", [$frm_data['room_id']], 'i');
-  $res3 = delete("DELETE FROM `room_features` WHERE `room_id`=?", [$frm_data['room_id']], 'i');
-  $res4 = delete("DELETE FROM `room_facilities` WHERE `room_id`=?", [$frm_data['room_id']], 'i');
-  $res5 = update("UPDATE `rooms` SET `removed`=? WHERE `id`=?", [1, $frm_data['room_id']], 'ii');
-
-  if ($res2 || $res3 || $res4 || $res5) {
-    echo 1;
+  $token = filter_input(INPUT_POST, 'csrf_token', FILTER_UNSAFE_RAW);
+  if (!$token || $token !== $_SESSION['csrf_token']) {
+    echo 'Xóa phòng thất bại!';
+    header($_SERVER['SERVER_PROTOCOL'] . ' 405 Thiếu CSRF token');
+    exit;
   } else {
-    echo 0;
+    $res1 = select("SELECT * FROM `room_images` WHERE `room_id`=?", [$frm_data['room_id']], 'i');
+    while ($row = mysqli_fetch_assoc($res1)) {
+      deleteImage($row['image'], ROOMS_FOLDER);
+    }
+    $res2 = delete("DELETE FROM `room_images` WHERE `room_id`=?", [$frm_data['room_id']], 'i');
+    $res3 = delete("DELETE FROM `room_features` WHERE `room_id`=?", [$frm_data['room_id']], 'i');
+    $res4 = delete("DELETE FROM `room_facilities` WHERE `room_id`=?", [$frm_data['room_id']], 'i');
+    $res5 = update("UPDATE `rooms` SET `removed`=? WHERE `id`=?", [1, $frm_data['room_id']], 'ii');
+    if ($res2 || $res3 || $res4 || $res5) {
+      echo 1;
+    } else {
+      echo 0;
+    }
   }
-
 }
-
 ?>

@@ -45,6 +45,14 @@
 
 
   <?php 
+  function generate_csrf_token()
+{
+  $token = bin2hex(random_bytes(32));
+
+  $_SESSION['csrf_token'] = $token;
+
+  return $token;
+}
     
     if(isset($_POST['login']))
     {
@@ -58,6 +66,7 @@
         $row = mysqli_fetch_assoc($res);
         $_SESSION['adminLogin'] = true;
         $_SESSION['adminId'] = $row['sr_no'];
+        $_SESSION['csrf_token'] = generate_csrf_token();
         redirect('dashboard.php');
       }
       else{

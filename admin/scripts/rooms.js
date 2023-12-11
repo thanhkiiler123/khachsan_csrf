@@ -286,6 +286,7 @@ function remove_room(room_id)
     let data = new FormData();
     data.append('room_id',room_id);
     data.append('remove_room','');
+    data.append('csrf_token',$_SESSION['csrf_token']);
 
     let xhr = new XMLHttpRequest();
     xhr.open("POST","ajax/rooms.php",true);

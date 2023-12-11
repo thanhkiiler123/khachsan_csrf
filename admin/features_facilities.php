@@ -130,6 +130,7 @@
               <textarea name="facility_desc" class="form-control shadow-none" rows="3"></textarea>
             </div>
           </div>
+          <input type="hidden" name="csrf_token" value="$_SESSION[csrf_token]">
           <div class="modal-footer">
             <button type="reset" class="btn text-secondary shadow-none" data-bs-dismiss="modal">Huỷ</button>
             <button type="submit" class="btn custom-bg text-white shadow-none">Thêm</button>

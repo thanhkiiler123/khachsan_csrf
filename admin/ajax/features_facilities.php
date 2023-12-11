@@ -57,24 +57,31 @@
 
   if(isset($_POST['add_facility']))
   {
-    $frm_data = filteration($_POST);
-
-    $img_r = uploadSVGImage($_FILES['icon'],FACILITIES_FOLDER);
-
-    if($img_r == 'inv_img'){
-      echo $img_r;
-    }
-    else if($img_r == 'inv_size'){
-      echo $img_r;
-    }
-    else if($img_r == 'upd_failed'){
-      echo $img_r;
-    }
-    else{
-      $q = "INSERT INTO `facilities`(`icon`,`name`, `description`) VALUES (?,?,?)";
-      $values = [$img_r,$frm_data['name'],$frm_data['desc']];
-      $res = insert($q,$values,'sss');
-      echo $res;
+    $token = filter_input(INPUT_POST, 'csrf_token', FILTER_UNSAFE_RAW);
+    if (!$token || $token !== $_SESSION['csrf_token']) {
+      echo 'Thêm tiện nghi thất bại!';
+      header($_SERVER['SERVER_PROTOCOL'] . ' 405 Thiếu CSRF token');
+      exit;
+    } else {
+      $frm_data = filteration($_POST);
+  
+      $img_r = uploadSVGImage($_FILES['icon'],FACILITIES_FOLDER);
+  
+      if($img_r == 'inv_img'){
+        echo $img_r;
+      }
+      else if($img_r == 'inv_size'){
+        echo $img_r;
+      }
+      else if($img_r == 'upd_failed'){
+        echo $img_r;
+      }
+      else{
+        $q = "INSERT INTO `facilities`(`icon`,`name`, `description`) VALUES (?,?,?)";
+        $values = [$img_r,$frm_data['name'],$frm_data['desc']];
+        $res = insert($q,$values,'sss');
+        echo $res;
+      }
     }
   }
 

@@ -48,13 +48,14 @@ assign_room_form.addEventListener('submit', function (e) {
 function kh_booking(id) {
   if (confirm("Bạn có chắc chắn, bạn muốn xác nhận đặt phòng này?")) {
     let data = new FormData();
-
+    let csrf_token = document.querySelector('input[name="csrf_token"]').value;
     data.append('booking_id', id);
     // data.append('trans_amt', price * totalDay);
     // data.append('booking_status', 'Đã Xác Nhận Đặt Phòng');
     // data.append('trans_status', 'TXN_SUCCESS');
     // data.append('payment_booking', '');
     data.append('kh_booking', '');
+    data.append('csrf_token', csrf_token);
 
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "ajax/khdatphong.php", true);
